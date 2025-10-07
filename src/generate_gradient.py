@@ -26,26 +26,44 @@ def create_gradient(start_color, end_color, width=1920, height=12):
 
     return Image.fromarray(gradient)
 
+def hex_to_rgb(hex_color):
+    """16進数カラーコードをRGBタプルに変換"""
+    # '#'を削除
+    hex_color = hex_color.lstrip('#')
+
+    # 3桁の短縮形式を6桁に展開
+    if len(hex_color) == 3:
+        hex_color = ''.join([c*2 for c in hex_color])
+
+    if len(hex_color) != 6:
+        raise ValueError(f"Invalid hex color: {hex_color}")
+
+    try:
+        r = int(hex_color[0:2], 16)
+        g = int(hex_color[2:4], 16)
+        b = int(hex_color[4:6], 16)
+        return (r, g, b)
+    except ValueError:
+        raise ValueError(f"Invalid hex color: {hex_color}")
+
 def color_to_hex(color):
     """RGB値を16進数文字列に変換"""
     return f"{color[0]:02x}{color[1]:02x}{color[2]:02x}"
 
 def main():
-    if len(sys.argv) != 7:
-        print("Usage: python generate_gradient.py R1 G1 B1 R2 G2 B2")
-        print("Example: python generate_gradient.py 255 0 0 0 0 255")
+    if len(sys.argv) != 3:
+        print("Usage: python generate_gradient.py START_COLOR END_COLOR")
+        print("Example: python generate_gradient.py ff0000 0000ff")
+        print("Example: python generate_gradient.py #ff0000 #0000ff")
         sys.exit(1)
 
     # コマンドライン引数から色を取得
-    start_color = tuple(map(int, sys.argv[1:4]))
-    end_color = tuple(map(int, sys.argv[4:7]))
-
-    # 色の値を検証
-    for color in [start_color, end_color]:
-        for value in color:
-            if not 0 <= value <= 255:
-                print("Error: RGB values must be between 0 and 255")
-                sys.exit(1)
+    try:
+        start_color = hex_to_rgb(sys.argv[1])
+        end_color = hex_to_rgb(sys.argv[2])
+    except ValueError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
     # 画像を生成
     img = create_gradient(start_color, end_color)
