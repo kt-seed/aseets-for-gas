@@ -7,3 +7,11 @@ dependencies = [
     "numpy>=2.3.3",
     "pillow>=11.3.0",
 ]
+
+[dependency-groups]
+dev = [
+    "taskipy>=1.14.1",
+]
+
+[tool.taskipy.tasks]
+green-brown = "python src/green_brown.py"

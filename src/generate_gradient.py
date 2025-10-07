@@ -50,17 +50,11 @@ def color_to_hex(color):
     """RGB値を16進数文字列に変換"""
     return f"{color[0]:02x}{color[1]:02x}{color[2]:02x}"
 
-def main():
-    if len(sys.argv) != 3:
-        print("Usage: python generate_gradient.py START_COLOR END_COLOR")
-        print("Example: python generate_gradient.py ff0000 0000ff")
-        print("Example: python generate_gradient.py #ff0000 #0000ff")
-        sys.exit(1)
-
-    # コマンドライン引数から色を取得
+def generate_from_colors(start_hex, end_hex):
+    """指定された色でグラデーション画像を生成"""
     try:
-        start_color = hex_to_rgb(sys.argv[1])
-        end_color = hex_to_rgb(sys.argv[2])
+        start_color = hex_to_rgb(start_hex)
+        end_color = hex_to_rgb(end_hex)
     except ValueError as e:
         print(f"Error: {e}")
         sys.exit(1)
@@ -69,9 +63,9 @@ def main():
     img = create_gradient(start_color, end_color)
 
     # ファイル名を色コードから生成
-    start_hex = color_to_hex(start_color)
-    end_hex = color_to_hex(end_color)
-    filename = f"gradient_{start_hex}_to_{end_hex}.png"
+    start_hex_clean = color_to_hex(start_color)
+    end_hex_clean = color_to_hex(end_color)
+    filename = f"gradient_{start_hex_clean}_to_{end_hex_clean}.png"
 
     # 保存先ディレクトリを作成
     output_dir = Path("images/gradations")
@@ -81,6 +75,15 @@ def main():
     output_path = output_dir / filename
     img.save(output_path)
     print(f"Gradient image saved: {output_path}")
+
+def main():
+    if len(sys.argv) != 3:
+        print("Usage: python generate_gradient.py START_COLOR END_COLOR")
+        print("Example: python generate_gradient.py ff0000 0000ff")
+        print("Example: python generate_gradient.py #ff0000 #0000ff")
+        sys.exit(1)
+
+    generate_from_colors(sys.argv[1], sys.argv[2])
 
 if __name__ == "__main__":
     main()
