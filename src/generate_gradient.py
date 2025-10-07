@@ -3,7 +3,7 @@ from PIL import Image
 import numpy as np
 from pathlib import Path
 
-def create_gradient(start_color, end_color, width=1920, height=12):
+def create_gradient(start_color, end_color, width=1920, height=200):
     """
     左から右へのグラデーション画像を生成
 
